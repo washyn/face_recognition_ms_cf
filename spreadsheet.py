@@ -22,18 +22,18 @@ if(os.path.exists('./reports.xlsx')):
     sheet = wb.get_sheet_by_name('Cse15')
     # sheet[ord() + '1']
     for col_index in range(1, 100):
-    	col = get_column_letter(col_index)
-    	if sheet.cell('%s%s' % (col,1)).value is None:
-    		col2 = get_column_letter(col_index - 1)
-    		# print sheet.cell('%s%s'% (col2, 1)).value
-    		if sheet.cell('%s%s' % (col2,1)).value != currentDate:
-    			sheet['%s%s' % (col,1)] = currentDate
-    		break
+        col = get_column_letter(col_index)
+        if sheet.cell('%s%s' % (col,1)).value is None:
+            col2 = get_column_letter(col_index - 1)
+            # print sheet.cell('%s%s'% (col2, 1)).value
+            if sheet.cell('%s%s' % (col2,1)).value != currentDate:
+                sheet['%s%s' % (col,1)] = currentDate
+            break
 
     #saving the file
     wb.save(filename = "reports.xlsx")
     ###############################################################################
-    	
+
 else:
     wb = Workbook()
     dest_filename = 'reports.xlsx'
