@@ -4,6 +4,13 @@ import numpy as np                                                              
 import sqlite3
 import dlib
 import os                                                                       # for creating folders
+
+
+###############################################################################
+
+currentDirectory = os.getcwd()
+sqliteDbFileName = "students.sqlite"
+
 ###############################################################################
 # get device video capturer, first device 0
 # if not have device thows exception or thow error
@@ -36,6 +43,7 @@ insertOrUpdate(Id, name, roll)                                                  
 ###############################################################################
 # create user folder for students images
 folderName = "user" + Id                                                        # creating the person or user folder
+
 folderPath = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dataset/"+folderName)
 
 if not os.path.exists(folderPath):

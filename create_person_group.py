@@ -9,8 +9,8 @@ personGroups = CF.person_group.lists()
 
 for personGroup in personGroups:
     if personGroupId == personGroup['personGroupId']:
-        print personGroupId + " already exists."
+        print(personGroupId + " already exists.")
         sys.exit()
 
 res = CF.person_group.create(personGroupId)
-print res
+print(res)

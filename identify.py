@@ -40,7 +40,7 @@ for filename in os.listdir(directory):
 		# se trata de detectar caras en la imangen
 		res = CF.face.detect(imgurl)
 		if len(res) != 1:
-			print "No face detected."
+			print("No face detected.")
 			continue
 			
 		faceIds = []
@@ -52,20 +52,20 @@ for filename in os.listdir(directory):
 		# identificar en el grupo de personas
 		res = CF.face.identify(faceIds, personGroupId)
 
-		print filename
-		print res
+		print(filename)
+		print(res)
 		
 		# si es que esta en los candidatos se otiene el personId,
 		# se busca en db  y se muestra toda su info
 		for face  in res:
 			if not face['candidates']:
-				print "Unknown"
+				print("Unknown") 
 			else:
 				personId = face['candidates'][0]['personId']
 				c.execute("SELECT * FROM Students WHERE personID = ?", (personId,))
 				row = c.fetchone()
 				attend[int(row[0])] += 1
-				print row[1] + " recognized"
+				print(row[1] + " recognized")
 		time.sleep(6)
 		
 #############################################################################
@@ -94,5 +94,5 @@ wb.save(filename = "reports.xlsx")
 #res = CF.face.identify(faceIds,personGroupId)
 # for face in res:
 #     personName = CF.person.get(personGroupId, face['candidates']['personId'])
-#     print personName
-#print res
+#     print(personName)
+#print(res)

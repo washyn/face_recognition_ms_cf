@@ -34,7 +34,7 @@ if len(sys.argv) is not 1:
             imgurl = urllib.pathname2url(os.path.join(imageFolder, filename))
             res = CF.face.detect(imgurl)
             if len(res) != 1:
-                print "No face detected in image"
+                print("No face detected in image")
             else:
                 res = CF.person.add_face(imgurl, personGroupId, person_id)
                 print(res)

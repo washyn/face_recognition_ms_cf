@@ -5,4 +5,4 @@ Key = '222bf86ba9634534a995d3eed09dc857'
 CF.Key.set(Key)
 
 res = CF.person_group.get_status(personGroupId)
-print res
+print(res)
