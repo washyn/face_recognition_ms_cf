@@ -61,3 +61,13 @@ identify.py	identificar cada rostro y marca la asistencia
 
 # Para iniciar agregando estudiante
 - Ver el orden cuando se quiere agregar un estudiante
+
+
+
+## add_student2.py
+al ejecutar script se le pide al usuario que ingrese el nombre de una persona, el cual sera gurdado en la base de datos sqlite, y se activara la camara y se gurdaran sus expresiones, imagenes en una carpeta con un nombre generado de forma aleatoria para el entrenamiento.
+
+## TODO:
+Terminar de revisar los scripts de :
+spreadsheet.py
+identity.py

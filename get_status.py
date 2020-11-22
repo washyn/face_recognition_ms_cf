@@ -1,8 +1,10 @@
 import cognitive_face as CF
 from global_variables import personGroupId
+from apiKeys import URL
+from apiKeys import APIKEY1
 ##############################################################################
-Key = '222bf86ba9634534a995d3eed09dc857'
-CF.Key.set(Key)
 
+CF.Key.set(APIKEY1)
+CF.BaseUrl.set(URL)
 res = CF.person_group.get_status(personGroupId)
 print(res)

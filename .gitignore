@@ -142,3 +142,8 @@ cython_debug/
 *.jpg
 *.xlsx
 *.db
+
+
+apiKeys.py
+
+*.sqlite

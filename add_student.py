@@ -4,20 +4,65 @@ import numpy as np                                                              
 import sqlite3
 import dlib
 import os                                                                       # for creating folders
+import uuid
+
+from db_models import Student
+from peewee import *
+
+from global_variables import sqliteDbFileName
 
 
 ###############################################################################
 
-currentDirectory = os.getcwd()
-sqliteDbFileName = "students.sqlite"
+def createStudentFolderId(dbFile):
+    db = SqliteDatabase(dbFile)
+    db.connect()
+    students = Student.select()
+    for i in students:
+        currentDirectory = os.getcwd()
+        folderPath = os.path.join(currentDirectory, "dataset",i.personGuid)
+        if not os.path.exists(folderPath):
+            os.makedirs(folderPath)
+    db.close()
+
+
+
+def createStudentImages(personId):
+    currentDirectory = os.getcwd()
+    folderPath = os.path.join(currentDirectory, "dataset",folderName)
+    if not os.path.exists(folderPath):
+        os.makedirs(folderPath)
+
+
+
+def readStudentInfo():
+    userInfo ={
+        "name":"",
+        "guid":str(uuid.uuid4())
+    }
+    userInfo["name"] = input("Ingrese nombre de estudiante")
+    return userInfo
+
+
+
+def addStudent(dbFile):
+    db = SqliteDatabase(dbFile)
+    db.connect()
+    student = readStudentInfo()
+    newStudent = Student.create(fullName=student["name"], personGuid=student["guid"])
+    newStudent.create()
+    db.close()
+
+
+
+addStudent(sqliteDbFileName)
+createStudentFolderId(sqliteDbFileName)
+
+
+
 
 ###############################################################################
-# get device video capturer, first device 0
-# if not have device thows exception or thow error
-cap = cv2.VideoCapture(0)
-detector = dlib.get_frontal_face_detector()
-
-###############################################################################
+### DELETE
 ## save entered info in sqlite db
 def insertOrUpdate(Id, Name, roll) :                                            # this function is for database
     connect = sqlite3.connect("Face-DataBase")                                  # connecting to the database
@@ -35,19 +80,31 @@ def insertOrUpdate(Id, Name, roll) :                                            
     connect.commit()                                                            # commiting into the database
     connect.close()                                                             # closing the connection
 ###############################################################################
+
+
+
 # read student data
-name = raw_input("Enter student's name : ")
-roll = raw_input("Enter student's Roll Number : ")
+name = input("Enter student's name : ")
+roll = input("Enter student's Roll Number : ")
 Id = roll[-2:]
 insertOrUpdate(Id, name, roll)                                                  # calling the sqlite3 database
 ###############################################################################
 # create user folder for students images
 folderName = "user" + Id                                                        # creating the person or user folder
 
+
+
 folderPath = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dataset/"+folderName)
 
 if not os.path.exists(folderPath):
     os.makedirs(folderPath)
+
+###############################################################################
+# get device video capturer, first device 0
+# if not have device thows exception or thow error
+cap = cv2.VideoCapture(0)
+detector = dlib.get_frontal_face_detector()
+
 ###############################################################################
 
 # capture sample images of student for train, and save image in folder

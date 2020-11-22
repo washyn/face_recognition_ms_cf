@@ -1,9 +1,12 @@
 ##############################################################################
 import cognitive_face as CF
 from global_variables import personGroupId
+from global_variables import cfKey
+from global_variables import URL
 
-Key = '222bf86ba9634534a995d3eed09dc857'
-CF.Key.set(Key)
+
+CF.Key.set(cfKey)
+CF.BaseUrl.set(URL)
 
 res = CF.person_group.train(personGroupId)
 print(res)

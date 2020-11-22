@@ -5,7 +5,8 @@ import sqlite3
 from openpyxl import Workbook, load_workbook
 from openpyxl.cell import get_column_letter, Cell, column_index_from_string
 import time
-
+from global_variables import URL
+from global_variables import cfKey
 ###################################################################################
 # prepare
 #get current date
@@ -20,8 +21,11 @@ def getDateColumn():
 			return col
 			
 ###################################################################################
-Key = '222bf86ba9634534a995d3eed09dc857'
-CF.Key.set(Key)
+
+CF.Key.set(cfKey)
+CF.BaseUrl.set(URL)
+
+
 
 connect = connect = sqlite3.connect("Face-DataBase")
 c = connect.cursor()
