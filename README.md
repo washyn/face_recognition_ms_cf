@@ -81,7 +81,7 @@ https://medium.com/@rachit.bedi1/microsoft-face-apis-using-python-e16775622e3b
 #### Install env Steps
 - Install python3, pip3 and add to path
 - Install cmake and add to path
-- Install c/c++ compiler (gcc/g++ in linux or visual c++ cmake tool windows for windows)
+- Install c/c++ compiler (gcc/g++ in linux or visual c++ cmake tool windows for windows) for build "dlib"
 
 - Optional, install virtualenv, create env and activate
 - Install required packages

@@ -5,8 +5,6 @@ BASE_URL = "https://567334982645648512.cognitiveservices.azure.com/"
 URL = "https://567334982645648512.cognitiveservices.azure.com/face/v1.0/"
 
 LOCATION = "southcentralus"
-
-
 #######################################################
 personGroupId = 'test2'
 sqliteDbFileName = "students3.sqlite"

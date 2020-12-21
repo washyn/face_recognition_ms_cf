@@ -4,19 +4,27 @@ import time
 import urllib
 import os
 
-import numpy as np
-import uuid
-from models import *
-from peewee import *
-import pathlib
-
-from global_variables import *
 import cognitive_face as CF
 
+from models import *
+from global_variables import *
 
 
-CF.Key.set(cfKey)
+
+CF.Key.set(APIKEY1)
 CF.BaseUrl.set(URL)
+
+
+
+###############################################################################
+# create person group if not exits
+###############################################################################
+# add person
+###############################################################################
+# add faces to person
+###############################################################################
+###############################################################################
+
 
 
 # registrar estudiante por consola
@@ -25,41 +33,92 @@ CF.BaseUrl.set(URL)
 # read faces
 # add faces to personGroup
 
-def readPersonDetails():
-    student = Student()
-    student.fullName = str(input("Ingrese nombre y apellido de una persona:"))
-    student.code = str(input("Ingrese el codigo o identificador de la persona:"))
-    
-    student.personGuid = str(uuid.uuid4())
-    student.folderGuid = str(uuid.uuid4())
-
-    return student
 
 
+###############################################################################
+###############################################################################
+###############################################################################
 
-def saveStudentInDb(student):
-    newStudent = Student.create(fullName = student.fullName, 
-        code = student.code, 
-        folderGuid = student.folderGuid,
-        personGuid = student.personGuid)
-    newStudent.save()
-
-
-
+# Ok, iterate all person groups when not exists person group
+# crete person group
 def createPersonGroupIfNotExits():
     personGroups = CF.person_group.lists()
     for personGroup in personGroups:
         if personGroupId == personGroup['personGroupId']:
             return None
     result = CF.person_group.create(personGroupId)
+    return result
+
+
+# ok, create person id
+def createPersonInCfAndUpdateInLocalDb(student):
+    # def create(person_group_id, name, user_data=None):
+    response = CF.person.create(personGroupId, f"{student.code}")
+    Student.update(personGuid = response['personId']).where(Student.id == student.id).execute()
+    Student.update(personId = response['personId']).where(Student.id == student.id).execute()
+    print(response)
+    return response
+
+# add image faces to person
+def addImageFacesToPerson(student, folder):
+    for filename in os.listdir(folder):
+        if filename.endswith(".jpg"):
+            print(filename)
+
+            imgurl = urllib.request.pathname2url(os.path.join(folder, filename))
+            res = CF.face.detect(imgurl)
+
+            print(res)
+
+            if len(res) != 1:
+                print("No face detected in image")
+            else:
+                # def add_face(image,
+                #              person_group_id,
+                #              person_id,
+                #              user_data=None,
+                #              target_face=None):
+                res = CF.person.add_face(imgurl, personGroupId, student.personId)
+                print(res)
+            time.sleep(6)
+
+
+###############################################################################
+###############################################################################
+###############################################################################
+
+
+# ok
+def readPersonDetails():
+    student = Student()
+
+    student.fullName = str(input("Ingrese nombre y apellido de una persona:"))
+    student.code = str(input("Ingrese el codigo o identificador de la persona:"))
+    
+    student.personGuid = str(uuid.uuid4())
+    student.folderGuid = str(uuid.uuid4())
+    student.personId = str(uuid.uuid4())
+
+    return student
 
 
 
 
 
+# ok
+def saveStudentInDb(student):
+    newStudent = Student.create(fullName = student.fullName, 
+        code = student.code, 
+        folderGuid = student.folderGuid,
+        personGuid = student.personGuid,
+        personId = student.personId)
+    newStudent.save()
+    return newStudent
+
+# ok, register faces of student
 def creaateSampleFacesStudent(student, folderForSave):
     sampleNum = 0
-    cantidadDeMuestras = 20
+    nSamples = 20
 
     cap = cv2.VideoCapture(0)
     detector = dlib.get_frontal_face_detector()
@@ -78,63 +137,45 @@ def creaateSampleFacesStudent(student, folderForSave):
         cv2.imshow('frame', img)
         cv2.waitKey(1)
         print(f"image num {sampleNum}")
-        if(sampleNum >= cantidadDeMuestras):
+        if(sampleNum >= nSamples):
             break
 
     cap.release()
     cv2.destroyAllWindows()
 
 
+################################################################################################
+
+
 def createFolderForDataset(folderName):
+    folderDataset = "datasets"
     currentDirectory = os.getcwd()
-    folderPath = os.path.join(currentDirectory, "datasets", folderName)
+    folderPath = os.path.join(currentDirectory, folderDataset, folderName)
     if not os.path.exists(folderPath):
         os.makedirs(folderPath)
     return folderPath
 
 
 
-
-def createPersonInCf(student):
-    res = CF.person.create(personGroupId, f"{student.code}")
-    print(res)
-    Student.update(personGuid = res['personId']).where(Student.id == student.id).execute()
-
-
-
-def addImageFacesToPersonId(student, folder):
-
-    for filename in os.listdir(folder):
-        if filename.endswith(".jpg"):
-            print(filename)
-            
-            imgurl = urllib.request.pathname2url(os.path.join(folder, filename))
-            res = CF.face.detect(imgurl)
-            print(res)
-
-            if len(res) != 1:
-                print("No face detected in image")
-            else:
-                res = CF.person.add_face(imgurl, personGroupId, student.personGuid)
-                print(res)
-            time.sleep(6)
-
-
-# check status, if not trained train
-def train(student):
+# OK, check status, if not trained train
+def train():
+    # def train(person_group_id):
+    # statusTrained = CF.person_group.get_status(personGroupId)
+    # if statusTrained["status"] != "succeeded":
+    #     res = CF.person_group.train(personGroupId)
     res = CF.person_group.train(personGroupId)
+    return res
 
 
 student = readPersonDetails()
-saveStudentInDb(student)
+student = saveStudentInDb(student)
 
 folder = createFolderForDataset(student.folderGuid)
 creaateSampleFacesStudent(student, folder)
 
 createPersonGroupIfNotExits()
-createPersonInCf(student)
+createPersonInCfAndUpdateInLocalDb(student)
 
+addImageFacesToPerson(student, folder)
 
-addImageFacesToPersonId(student, folder)
-train(student)
-
+train()

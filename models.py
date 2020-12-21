@@ -24,8 +24,11 @@ class BaseModel(Model):
 class Student(BaseModel):
     fullName = CharField(unique=True)
     code = CharField(unique=True)
+
     personGuid = CharField(unique=False)
     folderGuid = CharField(unique=False)
+
+    personId = CharField(unique=False)
 
     # personGuid = UUIDField()
 
