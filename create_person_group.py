@@ -1,15 +1,14 @@
 # oka executed
 
 import cognitive_face as CF
-from global_variables import personGroupId
 import sys
-from global_variables import cfKey
-from apiKeys import URL
+from global_variables import *
 
 
 CF.Key.set(cfKey)
 CF.BaseUrl.set(URL)
 ###################################################################
+
 personGroups = CF.person_group.lists()
 
 for personGroup in personGroups:

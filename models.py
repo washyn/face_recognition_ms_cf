@@ -1,9 +1,8 @@
-from global_variables import sqliteDbFileName
+from global_variables import *
 from peewee import *
 import datetime
 import uuid
 
-from models import *
 
 db = SqliteDatabase(sqliteDbFileName)
 
@@ -21,10 +20,16 @@ class BaseModel(Model):
 #     created_date = DateTimeField(default=datetime.datetime.now)
 #     is_published = BooleanField(default=True)
 
+
 class Student(BaseModel):
     fullName = CharField(unique=True)
-    # personGuid = UUIDField()
+    code = CharField(unique=True)
     personGuid = CharField(unique=False)
     folderGuid = CharField(unique=False)
 
+    # personGuid = UUIDField()
+
     # faceIdentifier = CharField(unique=False)
+
+    def __str__(self):
+        return f"Full name:{self.fullName}\nCode:{self.code}\nPerson guid:{self.personGuid}\nFolder guid:{self.folderGuid}"

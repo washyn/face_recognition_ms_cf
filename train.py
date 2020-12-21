@@ -1,8 +1,6 @@
 ##############################################################################
 import cognitive_face as CF
-from global_variables import personGroupId
-from global_variables import cfKey
-from global_variables import URL
+from global_variables import *
 
 
 CF.Key.set(cfKey)

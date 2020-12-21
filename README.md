@@ -71,3 +71,34 @@ al ejecutar script se le pide al usuario que ingrese el nombre de una persona, e
 Terminar de revisar los scripts de :
 spreadsheet.py
 identity.py
+
+Url reference article
+With nodeJs
+https://www.codemag.com/Article/1805031/Identify-Faces-with-Microsoft-Cognitive-Services
+Example python, with request lib 
+https://medium.com/@rachit.bedi1/microsoft-face-apis-using-python-e16775622e3b
+
+#### Install env Steps
+- Install python3, pip3 and add to path
+- Install cmake and add to path
+- Install c/c++ compiler (gcc/g++ in linux or visual c++ cmake tool windows for windows)
+
+- Optional, install virtualenv, create env and activate
+- Install required packages
+- Optional install pylint
+
+- Create azure cf apikeys
+
+Steps for use azure cognitive faces
+- Create person group
+- Create persons, add image face to persons
+- Train person group
+- Identify
+
+
+Execute scripts
+- Crear db
+- Registrar persona
+- Identificar personas
+
+

@@ -2,14 +2,9 @@
 
 import sys
 import cognitive_face as CF
-from global_variables import personGroupId
-from global_variables import cfKey
-from global_variables import sqliteDbFileName
-from apiKeys import URL
 import sqlite3
 from models import *
-from apiKeys import APIKEY1
-from apiKeys import URL
+from global_variables import *
 
 ###################################################################
 # microsoft cognitive service
@@ -18,20 +13,12 @@ CF.Key.set(APIKEY1)
 CF.BaseUrl.set(URL)
 
 
+# esto deberia de ejecutarse despues de la creacion del estudiante
 def createFaceIdFromStudentId():
-    studentId = input("enter student id:")
+    studentId = input("Ingrese el id del estudiante:")
     res = CF.person.create(personGroupId, str(studentId))
-    
     print(res)
-    # todo comment where not requier connetct
-    db = SqliteDatabase(sqliteDbFileName)
-    db.connect()
-    # update
-    nrows = (Student
-            .update(personGuid=res['personId'])
-            .where(Student.id == studentId)
-            .execute())
-    db.close()
+    Student.update(personGuid = res['personId']).where(Student.id == studentId).execute()
 
 createFaceIdFromStudentId()
 
