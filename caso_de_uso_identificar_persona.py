@@ -1,72 +1,81 @@
-from models import Student
-import uuid
+import cv2
+import dlib
+import urllib
+import os
 
+import cognitive_face as CF
+
+from models import *
 from global_variables import *
 
-import cv2
-import numpy as np
-import sqlite3
-import dlib
-import os
-import uuid
-
-
-from models import *
-from peewee import *
-
-import cognitive_face as CF
-
-
-
-
-import sys
-import os
-import time
-import cognitive_face as CF
-
-from global_variables import personGroupId
-from global_variables import cfKey
-from global_variables import sqliteDbFileName
-
-
-import urllib
-import sqlite3
-import pathlib
-
-from models import *
 
 ############################################################
 
 
-CF.Key.set(cfKey)
+CF.Key.set(APIKEY1)
 CF.BaseUrl.set(URL)
 
 
 def createFolderIfNotExits(folder):
-    imagePath = os.path.join(os.getcwd(),folder)
+    imagePath = os.path.join(os.getcwd(), folder)
     if not os.path.exists(imagePath):
         os.makedirs(imagePath)
     return imagePath
 
+
+
+
 def getPersonDetailsFromImage(imagePath):
 
     imgurl = urllib.request.pathname2url(imagePath)
+    # Detect Face and return Face ID
     result = CF.face.detect(imgurl)
-
+    # this faceIds only contain one face id, why image for detect has one face
     faceIds = []
     for face in result:
         faceIds.append(face["faceId"])
-    
+
+    # returns id of person detected personId
+    # for this case only return one result
+    # require object as
+    # {
+    #     'personGroupId': personGroupId,
+    #     "faceIds": [faceId],
+    #     "maxNumOfCandidatesReturned": 1,
+    #     "confidenceThreshold": 0.5
+    # }
+
+    # RESULT
+    # [{
+    #       "faceId":
+    #       "1990e7b2-490e-49fc-a0bd-c25c39eb7a7f",
+    #       "candidates": [{
+    #           "personId": "66ec4630-5369-4830-a20b-0f329d6eaf56",
+    #           "confidence": 0.77458
+    #         }]
+    #  }
+    # ]
+
+    # def identify(face_ids,
+    #              person_group_id=None,
+    #              large_person_group_id=None,
+    #              max_candidates_return=1,
+    #              threshold=None):
     result = CF.face.identify(faceIds, personGroupId)
     for face in result:
-        personCode = CF.person.get(personGroupId, face["candidates"]["personId"])
+        # def get(person_group_id, person_id):
+        # TODO: check, "personId" is in first element of candidates
+        personId = face["candidates"]["personId"]
+        # Retrieve a person's information
+        personCode = CF.person.get(personGroupId, personId)
         student = Student.select(Student.code == personCode).first()
+        student2 = Student.select(Student.personId == personId).first()
         print(student)
+        print(student2)
 
 
 def detectFaces(folderTemp):
 
-    imageName = ""
     cap = cv2.VideoCapture(0)
     detector = dlib.get_frontal_face_detector()
 
