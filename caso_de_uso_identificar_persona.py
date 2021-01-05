@@ -29,7 +29,8 @@ def getPersonDetailsFromImage(imagePath):
 
     imgurl = urllib.request.pathname2url(imagePath)
     # Detect Face and return Face ID
-    result = CF.face.detect(imgurl)
+    # result = CF.face.detect(imgurl)
+    result = CF.face.detect(imagePath)
     # this faceIds only contain one face id, why image for detect has one face
     faceIds = []
     for face in result:
@@ -65,13 +66,11 @@ def getPersonDetailsFromImage(imagePath):
     for face in result:
         # def get(person_group_id, person_id):
         # TODO: check, "personId" is in first element of candidates
-        personId = face["candidates"]["personId"]
+        personId = face["candidates"][0]["personId"]
         # Retrieve a person's information
-        personCode = CF.person.get(personGroupId, personId)
-        student = Student.select(Student.code == personCode).first()
-        student2 = Student.select(Student.personId == personId).first()
+        # personCode = CF.person.get(personGroupId, personId)
+        student = Student.select().where(Student.personId == personId).first()
         print(student)
-        print(student2)
 
 
 def detectFaces(folderTemp):
@@ -83,16 +82,16 @@ def detectFaces(folderTemp):
         ret, img = cap.read()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         dets = detector(img, 1)
+        
         for i, d in enumerate(dets):
             fileName = "person--" + str(uuid.uuid4()) +".jpg"
             fullFileName = os.path.join(folderTemp, fileName)
             cv2.imwrite(fullFileName, img[d.top():d.bottom(), d.left():d.right()])
-            print(f"image num {fileName}")
-
-            # getPersonDetailsFromImage(fullFileName)
-
+            # print(f"image num {fileName}")
+            # eror de escritura
             cv2.rectangle(img, (d.left(), d.top())  ,(d.right(), d.bottom()),(0,255,0) ,2)
             cv2.waitKey(200)
+            getPersonDetailsFromImage(fullFileName)
 
         cv2.imshow('frame', img)
         cv2.waitKey(1)

@@ -102,3 +102,26 @@ Execute scripts
 - Identificar personas
 
 
+---
+
+Instalacion de programas necesarios
+
+
+Python, interprete para ejecutar los scripts en Python
+Visual c++, compilador de c++, necesarios para instalar compilar e instalar , DLIB
+Cmake, sistema de compilacion , necesarios para instalar compilar e instalar , DLIB
+agrear los 3 programas al path
+
+
+
+
+
+Primero se crea en CF, para la api key en el portal de azure.
+
+
+Crea un grupo de personas.
+Agrear personas en el grupo, se crea una persona en CF , y se agrega caras a esa persona, por cada una de las personas que quieras reconocer 
+Finalmente se hace el entrenamiendo.
+---------------------------------------------------------------------
+
+Reconocer

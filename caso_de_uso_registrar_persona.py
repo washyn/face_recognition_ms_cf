@@ -3,6 +3,8 @@ import dlib
 import time
 import urllib
 import os
+import pathlib
+
 
 import cognitive_face as CF
 
@@ -11,7 +13,7 @@ from global_variables import *
 
 
 
-CF.Key.set(APIKEY1)
+CF.Key.set(cfKey)
 CF.BaseUrl.set(URL)
 
 
@@ -57,7 +59,8 @@ def createPersonInCfAndUpdateInLocalDb(student):
     Student.update(personGuid = response['personId']).where(Student.id == student.id).execute()
     Student.update(personId = response['personId']).where(Student.id == student.id).execute()
     print(response)
-    return response
+    # return response
+    return Student.get_by_id(student.id)
 
 # add image faces to person
 def addImageFacesToPerson(student, folder):
@@ -65,8 +68,20 @@ def addImageFacesToPerson(student, folder):
         if filename.endswith(".jpg"):
             print(filename)
 
-            imgurl = urllib.request.pathname2url(os.path.join(folder, filename))
-            res = CF.face.detect(imgurl)
+            # corregit el url de image
+            # ver el objeto URL
+            # os.path.abspath
+
+
+           
+
+            fullFileName = os.path.join(folder, filename)
+            # absPath = os.path.abspath(fullFileName)
+            # imgurl = urllib.request.pathname2url(absPath)
+            # imgurl = pathlib.Path(fullFileName).as_uri()
+
+
+            res = CF.face.detect(fullFileName)
 
             print(res)
 
@@ -78,7 +93,7 @@ def addImageFacesToPerson(student, folder):
                 #              person_id,
                 #              user_data=None,
                 #              target_face=None):
-                res = CF.person.add_face(imgurl, personGroupId, student.personId)
+                res = CF.person.add_face(fullFileName, personGroupId, student.personId)
                 print(res)
             time.sleep(6)
 
@@ -118,7 +133,7 @@ def saveStudentInDb(student):
 # ok, register faces of student
 def creaateSampleFacesStudent(student, folderForSave):
     sampleNum = 0
-    nSamples = 20
+    nSamples = 5
 
     cap = cv2.VideoCapture(0)
     detector = dlib.get_frontal_face_detector()
@@ -131,6 +146,9 @@ def creaateSampleFacesStudent(student, folderForSave):
             sampleNum += 1
             fileName = "person--" + str(student.folderGuid) + "--" + str(sampleNum) + ".jpg"
             fullFileName = os.path.join(folderForSave, fileName)
+            # se toma la captura 2 veces
+            # cv2.imwrite(folderPath + "/User." + Id + "." + str(sampleNum) + ".jpg", img[d.top():d.bottom(), d.left():d.right()])      
+
             cv2.imwrite(fullFileName, img[d.top():d.bottom(), d.left():d.right()])
             cv2.rectangle(img, (d.left(), d.top())  ,(d.right(), d.bottom()),(0,255,0) ,2)
             cv2.waitKey(200)
@@ -167,15 +185,24 @@ def train():
     return res
 
 
-student = readPersonDetails()
-student = saveStudentInDb(student)
+def eliminarPersonGroup(personGr):
+    CF.person_group.delete(personGr)
 
-folder = createFolderForDataset(student.folderGuid)
-creaateSampleFacesStudent(student, folder)
+####################################
 
-createPersonGroupIfNotExits()
-createPersonInCfAndUpdateInLocalDb(student)
+# student = readPersonDetails()
+# student = saveStudentInDb(student)
 
-addImageFacesToPerson(student, folder)
+# folder = createFolderForDataset(student.folderGuid)
+# creaateSampleFacesStudent(student, folder)
+
+# createPersonGroupIfNotExits()
+
+# student = createPersonInCfAndUpdateInLocalDb(student)
+# addImageFacesToPerson(student, folder)
+####################################
+
+
+# eliminarPersonGroup(personGroupId)
 
 train()
