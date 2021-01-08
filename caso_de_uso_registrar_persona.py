@@ -143,6 +143,7 @@ def creaateSampleFacesStudent(student, folderForSave):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         dets = detector(img, 1)
         for i, d in enumerate(dets):
+            # TODO: check this part
             sampleNum += 1
             fileName = "person--" + str(student.folderGuid) + "--" + str(sampleNum) + ".jpg"
             fullFileName = os.path.join(folderForSave, fileName)

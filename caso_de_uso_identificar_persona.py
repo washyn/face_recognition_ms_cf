@@ -84,6 +84,7 @@ def detectFaces(folderTemp):
         dets = detector(img, 1)
         
         for i, d in enumerate(dets):
+            # TODO: check this part
             fileName = "person--" + str(uuid.uuid4()) +".jpg"
             fullFileName = os.path.join(folderTemp, fileName)
             cv2.imwrite(fullFileName, img[d.top():d.bottom(), d.left():d.right()])
