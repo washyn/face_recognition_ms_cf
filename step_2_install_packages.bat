@@ -14,3 +14,7 @@ pip install opencv-python
 pip install dlib
 
 pip install peewee
+
+
+pip install Pillow
+pip install pytesseract

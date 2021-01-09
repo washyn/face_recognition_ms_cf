@@ -24,6 +24,8 @@ class Form(tk.Tk):
         super().__init__()
         self.title("Registro de estudiante")
 
+        self.resizable(False, False)
+        
         self.nombres = None
         self.apellidos = None
         self.codigo = None
@@ -72,7 +74,15 @@ class Form(tk.Tk):
         # creaateSampleFacesStudent(folder)
 
         messagebox.showinfo("Terminado de procesar","Se termino de registrar el estudiante")
+        
 
+        self.nombres.set("")
+        self.codigo.set("")
+        self.apellidos.set("")
+
+
+        # close window
+        # self.quit()
 
 
 if __name__ == "__main__":
