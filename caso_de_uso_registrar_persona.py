@@ -52,15 +52,18 @@ def createPersonGroupIfNotExits():
     return result
 
 
-# ok, create person id
+# ok, create person id and update in database
 def createPersonInCfAndUpdateInLocalDb(student):
     # def create(person_group_id, name, user_data=None):
     response = CF.person.create(personGroupId, f"{student.code}")
+    # update personId
     Student.update(personGuid = response['personId']).where(Student.id == student.id).execute()
     Student.update(personId = response['personId']).where(Student.id == student.id).execute()
     print(response)
     # return response
     return Student.get_by_id(student.id)
+
+
 
 # add image faces to person
 def addImageFacesToPerson(student, folder):
@@ -72,14 +75,10 @@ def addImageFacesToPerson(student, folder):
             # ver el objeto URL
             # os.path.abspath
 
-
-           
-
             fullFileName = os.path.join(folder, filename)
             # absPath = os.path.abspath(fullFileName)
             # imgurl = urllib.request.pathname2url(absPath)
             # imgurl = pathlib.Path(fullFileName).as_uri()
-
 
             res = CF.face.detect(fullFileName)
 
@@ -95,7 +94,9 @@ def addImageFacesToPerson(student, folder):
                 #              target_face=None):
                 res = CF.person.add_face(fullFileName, personGroupId, student.personId)
                 print(res)
-            time.sleep(6)
+
+            # time.sleep(6)
+
 
 
 ###############################################################################
@@ -103,7 +104,7 @@ def addImageFacesToPerson(student, folder):
 ###############################################################################
 
 
-# ok
+# ok, Read person details from console, full name and code
 def readPersonDetails():
     student = Student()
 
@@ -120,7 +121,7 @@ def readPersonDetails():
 
 
 
-# ok
+# ok, save student in database
 def saveStudentInDb(student):
     newStudent = Student.create(fullName = student.fullName, 
         code = student.code, 
@@ -130,10 +131,11 @@ def saveStudentInDb(student):
     newStudent.save()
     return newStudent
 
+
 # ok, register faces of student
 def creaateSampleFacesStudent(student, folderForSave):
     sampleNum = 0
-    nSamples = 5
+    nSamples = 100
 
     cap = cv2.VideoCapture(0)
     detector = dlib.get_frontal_face_detector()
@@ -152,8 +154,10 @@ def creaateSampleFacesStudent(student, folderForSave):
 
             cv2.imwrite(fullFileName, img[d.top():d.bottom(), d.left():d.right()])
             cv2.rectangle(img, (d.left(), d.top())  ,(d.right(), d.bottom()),(0,255,0) ,2)
+            # show 
             cv2.waitKey(200)
         cv2.imshow('frame', img)
+        # show 
         cv2.waitKey(1)
         print(f"image num {sampleNum}")
         if(sampleNum >= nSamples):
@@ -165,7 +169,7 @@ def creaateSampleFacesStudent(student, folderForSave):
 
 ################################################################################################
 
-
+# crea un folder donde se guardara las imagenes de muestra
 def createFolderForDataset(folderName):
     folderDataset = "datasets"
     currentDirectory = os.getcwd()
@@ -177,33 +181,37 @@ def createFolderForDataset(folderName):
 
 
 # OK, check status, if not trained train
+# entrena el modelo
 def train():
     # def train(person_group_id):
     # statusTrained = CF.person_group.get_status(personGroupId)
     # if statusTrained["status"] != "succeeded":
     #     res = CF.person_group.train(personGroupId)
     res = CF.person_group.train(personGroupId)
+    print("Se entreno el grupo de personas")
     return res
 
 
+# elimina el grupo de personas
 def eliminarPersonGroup(personGr):
     CF.person_group.delete(personGr)
+    print("eliminado el person group")
 
 ####################################
 
-# student = readPersonDetails()
-# student = saveStudentInDb(student)
+student = readPersonDetails()
+student = saveStudentInDb(student)
 
-# folder = createFolderForDataset(student.folderGuid)
-# creaateSampleFacesStudent(student, folder)
+folder = createFolderForDataset(student.folderGuid)
+creaateSampleFacesStudent(student, folder)
 
-# createPersonGroupIfNotExits()
+createPersonGroupIfNotExits()
 
-# student = createPersonInCfAndUpdateInLocalDb(student)
-# addImageFacesToPerson(student, folder)
+student = createPersonInCfAndUpdateInLocalDb(student)
+addImageFacesToPerson(student, folder)
 ####################################
 
 
 # eliminarPersonGroup(personGroupId)
 
-train()
+# train()
