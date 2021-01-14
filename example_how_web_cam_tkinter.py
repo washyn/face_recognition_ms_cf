@@ -18,7 +18,7 @@ root.bind('<Escape>', lambda e: root.quit())
 lmain = Label(root)
 lmain.pack()
 
-personLabel = Label(root, text="Hello Tkinter!", font=("Arial",25))
+personLabel = Label(root, text="Persona identificada", font=("Arial",25))
 
 personLabel.pack()
 

@@ -18,12 +18,41 @@ import os
 import uuid
 
 
+# import dependencies from caso de uso registrar persona
+
+
+# student = readPersonDetails()
+# student = saveStudentInDb(student)
+# folder = createFolderForDataset(student.folderGuid)
+# creaateSampleFacesStudent(student, folder)
+# createPersonGroupIfNotExits()
+# student = createPersonInCfAndUpdateInLocalDb(student)
+# addImageFacesToPerson(student, folder)
+
+from caso_de_uso_registrar_persona import saveStudentInDb, createFolderForDataset, creaateSampleFacesStudent, createPersonInCfAndUpdateInLocalDb, addImageFacesToPerson, Student
+
+
+
+
+def buildStudent(nombres, apellidos, codigo):
+    result = Student()
+
+    result.fullName = nombres
+    result.apellidos = apellidos
+    result.code = codigo
+
+    result.personGuid = str(uuid.uuid4())
+    result.folderGuid = str(uuid.uuid4())
+    result.personId = str(uuid.uuid4())
+
+    return result
+
+
 
 class Form(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Registro de persona")
-
         self.resizable(False, False)
         
         self.nombres = None
@@ -62,12 +91,21 @@ class Form(tk.Tk):
         button.grid(pady=(20,20),row = 5, column = 2)
 
 
+
     def mostrar_mensaje(self):
         messagebox.showinfo("Datos a guardar",f"Nombres : {self.nombres.get()}\nApellidos : {self.apellidos.get()}\nCódigo : {self.codigo.get()}")
 
-        # newStudent = addStudent(f"{self.nombres.get()} {self.apellidos.get()}", f"{self.codigo.get()}")
+
+        student = buildStudent(self.nombres.get(), self.apellidos.get(), self.codigo.get())
+        student = saveStudentInDb(student)
+        folder = createFolderForDataset(student.folderGuid)
 
         messagebox.showinfo("Registro de caras",f"Se procedera a realizar un registro de su cara, realize todos los gestos necesarios con su rostro para poder ser reconocido porteriormente.")
+
+        creaateSampleFacesStudent(student, folder)
+        student = createPersonInCfAndUpdateInLocalDb(student)
+        addImageFacesToPerson(student, folder)
+        
         # create folders
         # folder = createStudentImagesFolder(newStudent.folderGuid)
         # register
@@ -75,20 +113,16 @@ class Form(tk.Tk):
 
         messagebox.showinfo("Terminado de procesar","Se termino de registrar el estudiante")
         
-
         self.nombres.set("")
         self.codigo.set("")
         self.apellidos.set("")
 
-
         # close window
         # self.quit()
+
 
 
 if __name__ == "__main__":
     tc = Form()
     tc.create_all_controls()
     tc.mainloop()
-
-
-

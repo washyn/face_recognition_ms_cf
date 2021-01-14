@@ -111,3 +111,6 @@ Ventana de identificacion
 Formaulario de registro
 
 ![Texto alternativo](Captura-formulario.png)
+
+
+

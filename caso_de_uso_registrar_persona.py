@@ -135,7 +135,7 @@ def saveStudentInDb(student):
 # ok, register faces of student
 def creaateSampleFacesStudent(student, folderForSave):
     sampleNum = 0
-    nSamples = 100
+    nSamples = 10
 
     cap = cv2.VideoCapture(0)
     detector = dlib.get_frontal_face_detector()
@@ -199,19 +199,24 @@ def eliminarPersonGroup(personGr):
 
 ####################################
 
-student = readPersonDetails()
-student = saveStudentInDb(student)
+# only if main
 
-folder = createFolderForDataset(student.folderGuid)
-creaateSampleFacesStudent(student, folder)
+if __name__ == "__main__":
+    
 
-createPersonGroupIfNotExits()
+    student = readPersonDetails()
+    student = saveStudentInDb(student)
 
-student = createPersonInCfAndUpdateInLocalDb(student)
-addImageFacesToPerson(student, folder)
-####################################
+    folder = createFolderForDataset(student.folderGuid)
+    creaateSampleFacesStudent(student, folder)
+
+    createPersonGroupIfNotExits()
+
+    student = createPersonInCfAndUpdateInLocalDb(student)
+    addImageFacesToPerson(student, folder)
+    ####################################
 
 
-# eliminarPersonGroup(personGroupId)
+    # eliminarPersonGroup(personGroupId)
 
-# train()
+    # train()
