@@ -95,6 +95,19 @@ Primero se crea en CF, para la api key en el portal de azure.
 Crea un grupo de personas.
 Agrear personas en el grupo, se crea una persona en CF , y se agrega caras a esa persona, por cada una de las personas que quieras reconocer 
 Finalmente se hace el entrenamiendo.
+
 ---------------------------------------------------------------------
 
 Reconocer
+
+
+Capturas de pantalla de la interfaz
+---
+
+Ventana de identificacion
+
+![Texto alternativo](Captura_webcam.PNG)
+
+Formaulario de registro
+
+![Texto alternativo](Captura-formulario.png)

@@ -22,7 +22,7 @@ import uuid
 class Form(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Registro de estudiante")
+        self.title("Registro de persona")
 
         self.resizable(False, False)
         
