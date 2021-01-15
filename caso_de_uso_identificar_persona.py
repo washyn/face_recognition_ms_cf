@@ -16,11 +16,56 @@ CF.Key.set(APIKEY1)
 CF.BaseUrl.set(URL)
 
 
+def createFolderForImages():
+    imagePath = os.path.join(os.getcwd(), "temp_folder_images")
+    if not os.path.exists(imagePath):
+        os.makedirs(imagePath)
+    return imagePath
+
+
+
+
 def createFolderIfNotExits(folder):
     imagePath = os.path.join(os.getcwd(), folder)
     if not os.path.exists(imagePath):
         os.makedirs(imagePath)
     return imagePath
+
+
+
+def getPersonDetailsFromImageName(image):
+    imgurl = urllib.request.pathname2url(image)
+    result = CF.face.detect(image)
+    faceIds = []
+    for face in result:
+        faceIds.append(face["faceId"])
+    result = CF.face.identify(faceIds, personGroupId)
+    for face in result:
+        if len(face["candidates"]) > 0:
+            personId = face["candidates"][0]["personId"]
+            student = Student.select().where(Student.personId == personId).first()
+            return str(student)
+        else:
+            return "no reconocido"
+            print("no se reconocio a nadie")
+    return ""
+
+
+
+def getPersonDetailsFromImageFrame(image):
+    imgurl = urllib.request.pathname2url(image)
+    result = CF.face.detect(image)
+    faceIds = []
+    for face in result:
+        faceIds.append(face["faceId"])
+    result = CF.face.identify(faceIds, personGroupId)
+    for face in result:
+        if len(face["candidates"]) > 0:
+            personId = face["candidates"][0]["personId"]
+            student = Student.select().where(Student.personId == personId).first()
+            print(student)
+        else:
+            print("no se reconocio a nadie")
 
 
 
@@ -73,6 +118,7 @@ def getPersonDetailsFromImage(imagePath):
         print(student)
 
 
+
 def detectFaces(folderTemp):
 
     cap = cv2.VideoCapture(0)
@@ -93,7 +139,7 @@ def detectFaces(folderTemp):
             cv2.rectangle(img, (d.left(), d.top())  ,(d.right(), d.bottom()),(0,255,0) ,2)
             cv2.waitKey(200)
             getPersonDetailsFromImage(fullFileName)
-
+            
         cv2.imshow('frame', img)
         cv2.waitKey(1)
 
@@ -104,7 +150,8 @@ def detectFaces(folderTemp):
 
 
 path = "folder_temp_detect"
-tempImagePath = createFolderIfNotExits(path)
-detectFaces(tempImagePath)
 
+if __name__ == "__main__":
 
+    tempImagePath = createFolderIfNotExits(path)
+    detectFaces(tempImagePath)
