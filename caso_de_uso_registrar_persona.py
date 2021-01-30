@@ -197,7 +197,28 @@ def eliminarPersonGroup(personGr):
     CF.person_group.delete(personGr)
     print("eliminado el person group")
 
+
+
+def trainIfNotTrained():
+    # def train(person_group_id):
+    statusTrained = CF.person_group.get_status(personGroupId)
+    if statusTrained["status"] != "succeeded":
+        res = CF.person_group.train(personGroupId)
+
+
+
+
+
 ####################################
+
+
+
+
+
+
+
+
+
 
 # only if main
 

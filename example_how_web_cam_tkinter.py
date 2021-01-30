@@ -10,6 +10,13 @@ from PIL import Image,ImageTk
 from caso_de_uso_identificar_persona import createFolderForImages, getPersonDetailsFromImageFrame, getPersonDetailsFromImageName
 
 
+
+
+
+
+
+
+
 width, height = 800, 600
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
@@ -33,8 +40,28 @@ personLabel.pack()
 
 
 
+
+
+
+
 detector = dlib.get_frontal_face_detector()
 folderTemp = createFolderForImages()
+
+
+
+
+
+
+
+
+
+trainIfNotTrained()
+
+
+
+
+
+
 
 
 counter = 4564
@@ -57,6 +84,7 @@ def show_frame():
     for i,d in enumerate(dets):
         fileName = str(uuid.uuid4()) + ".jpg"
         fullFileName = os.path.join(folderTemp, fileName)
+        # TODO: uncomment
         # cv2.imwrite(fullFileName, frame[d.top():d.bottom(), d.left():d.right()])
 
 
@@ -65,13 +93,14 @@ def show_frame():
 
         cv2image = cv2.rectangle(frame, (d.left(), d.top())  ,(d.right(), d.bottom()),(0,255,0) ,2)
 
+        
         # cv2.waitKey(200)
         # personDetails = getPersonDetailsFromImageName(fullFileName)
     
         # personDetails = getPersonDetailsFromImage(frame[d.top():d.bottom(), d.left():d.right()])
 
 
-
+        # TODO: uncomment
         # personDetails = getPersonDetailsFromImageName(fullFileName)
         # personLabel.config(text = personDetails)
 
@@ -86,6 +115,8 @@ def show_frame():
     lmain.imgtk = imgtk
     lmain.configure(image=imgtk)
     lmain.after(10, show_frame)
+
+
 
 
 

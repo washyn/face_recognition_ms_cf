@@ -113,4 +113,9 @@ Formaulario de registro
 ![Texto alternativo](Captura-formulario.png)
 
 
+---
 
+### Pasos para usar:
+- Ejecutar el archivo "caso_de_uso_crear_base_de_datos.py"
+- Ejecutar el archivo "register_gui_2.py"
+- Ejecutar el archivo "example_how_web_cam_tkinter.py"
