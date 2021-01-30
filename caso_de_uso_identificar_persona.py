@@ -8,6 +8,7 @@ import cognitive_face as CF
 from models import *
 from global_variables import *
 
+from caso_de_uso_registrar_persona import trainIfNotTrained
 
 ############################################################
 

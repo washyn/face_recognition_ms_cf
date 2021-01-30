@@ -7,7 +7,7 @@ import uuid
 
 from tkinter import *
 from PIL import Image,ImageTk
-from caso_de_uso_identificar_persona import createFolderForImages, getPersonDetailsFromImageFrame, getPersonDetailsFromImageName
+from caso_de_uso_identificar_persona import createFolderForImages, getPersonDetailsFromImageFrame, getPersonDetailsFromImageName, trainIfNotTrained
 
 
 
