@@ -135,7 +135,7 @@ def saveStudentInDb(student):
 # ok, register faces of student
 def creaateSampleFacesStudent(student, folderForSave):
     sampleNum = 0
-    nSamples = 10
+    nSamples = NUMBER_OF_SAMPLES
 
     cap = cv2.VideoCapture(0)
     detector = dlib.get_frontal_face_detector()
